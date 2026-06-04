@@ -35,15 +35,23 @@ print(fish_target)
 knnmodel = KNeighborsClassifier()
 # k = 5 (기본값) : 가장 가까운 5개의 이웃을 기준으로 분류 (hyperparameter)
 
-# 모델 학습
-knnmodel.fit(fish_data, fish_target)
+# fish data 산점도 시각화
+plt.scatter(bream_length, bream_weight)  # bream 데이터 시각화
+plt.scatter(smelt_length, smelt_weight)  # smelt 데이터 시각화
+# 예측할 데이터 시각화
+plt.scatter(30, 420, marker="^")
+plt.scatter(9, 12, marker="D", color="blue")
 
-# 모델 성능 평가
-print(knnmodel.score(fish_data, fish_target))  # 정확도 1.0 ==> 과대적합
+plt.xlabel("length")
+plt.ylabel("weight")
+plt.savefig("fishdata.jpeg")
 
-# 모델 예측
-# predict() 함수는 하나의 데이터 전달이라도 2차원 배열로 전달해야함
-print(knnmodel.predict([[30, 420]]))  # bream
-print(knnmodel.predict([[9, 12]]))   # smelt
+# # 모델 학습
+# knnmodel.fit(fish_data, fish_target)
 
-    
+# # 모델 성능 평가
+# print(knnmodel.score(fish_data, fish_target))  # 정확도 1.0 ==> 과대적합
+
+# # 모델 예측
+# print(knnmodel.predict([[30, 420],[9, 12]]))  # 1 : bream, 0 : smelt
+# # predict() 함수는 하나의 데이터 전달이라도 2차원 배열로 전달해야함
