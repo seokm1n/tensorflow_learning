@@ -38,7 +38,7 @@ print('='*80)
 knnmodel = KNeighborsClassifier(n_neighbors=5)  # hyperparameter k = 5
 
 # 모델 학습
-knnmodel.fit(iris_train_x[['petal_len', 'petal_wid']], iris_train_x['target'])  # train_x의 'target' 컬럼이 정답데이터(train_y)
+knnmodel.fit(iris_train_x[['petal_len', 'petal_wid']].values, iris_train_x['target'].values)  # train_x의 'target' 컬럼이 정답데이터(train_y)
 
 # 모델 성능 평가
 print('acc : ',knnmodel.score(iris_train_x[['petal_len', 'petal_wid']].values, 
@@ -47,4 +47,17 @@ print('='*80)
 
 # 새로운 데이터 붓꽃 분류 (예측)
 pred = knnmodel.predict([[5.9, 2.3], [3.4, 1.8], [5.4, 2.2]])  # 0 : setosa, 1 : versicolor, 2 : virginica
-print([iris['target_names'][int(i)] for i in pred])
+for i in pred:
+    print(iris['target_names'][int(i)])
+
+new_pred = knnmodel.predict([[5.9, 2.3]])
+print(new_pred)
+# petal_len = 5.9, petal_wid = 2.3인 위치를 scatter(), '^' 마커로 출력, 색상 blue
+# 동시에 위 scatter으로 출력한 모든 데이터 위에 5.9, 2.3 위치를 출력
+
+for i in range(3):
+    plt.scatter(iris_train_x.loc[iris_train_x['target']==i,:]['petal_len'],
+                iris_train_x.loc[iris_train_x['target']==i,:]['petal_wid'])
+plt.scatter(5.9, 2.3, marker='^', color='blue')  # 새로운 데이터 위치 출력
+plt.savefig('iris.jpeg')
+
