@@ -12,12 +12,11 @@ iris = load_iris()
 
 iris_data = np.column_stack([iris['data'], iris['target']])  # 열방향으로 합침, 컬럼 추가도 같은 결과
 print(iris_data[:5])
-print('='*50)
-# 컬럼명 ==>  sepal_len, sepal_wid, petal_len, petal_wid, target
-iris_df = pd.DataFrame(data=iris_data['data'], columns=['sepal_len', 'sepal_wid', 'petal_len', 'petal_wid'])
+print('='*80)
+iris_df = pd.DataFrame(data=iris_data, columns=['sepal_len', 'sepal_wid', 'petal_len', 'petal_wid', 'target'])
 
 print(iris_df.head())
-print('='*50)
+print('='*80)
 
 # plt.scatter(iris_df['sepal_len'], iris_df['sepal_wid'], data=iris_df)
 # plt.savefig('iris_scatter.jpeg')
@@ -26,25 +25,26 @@ print('='*50)
 # 타겟데이터(train_y)는 'target' 사용
 iris_train_x = iris_df[['petal_len', 'petal_wid', 'target']].copy()#.values
 print(iris_train_x)
-print('='*50)
+print('='*80)
 
-# iris_train_x 데이터 시각화
-for i in range(3):
-    plt.scatter(iris_train_x.loc[iris_train_x['target']==i,:]['petal_len'],
-                iris_train_x.loc[iris_train_x['target']==i,:]['petal_wid'])
+# # iris_train_x 데이터 시각화
+# for i in range(3):
+#     plt.scatter(iris_train_x.loc[iris_train_x['target']==i,:]['petal_len'],
+#                 iris_train_x.loc[iris_train_x['target']==i,:]['petal_wid'])
 
-plt.savefig('iris.jpeg')
+# plt.savefig('iris.jpeg')
 
 # KNN 모델 준비  (k=5 디폴트값 사용)
-knnmodel = KNeighborsClassifier()
+knnmodel = KNeighborsClassifier(n_neighbors=5)  # hyperparameter k = 5
 
 # 모델 학습
-knnmodel.fit(iris_train_x, iris['target'])
+knnmodel.fit(iris_train_x[['petal_len', 'petal_wid']], iris_train_x['target'])  # train_x의 'target' 컬럼이 정답데이터(train_y)
 
 # 모델 성능 평가
-print(knnmodel.score(iris_train_x, iris['target']))  # 정확도
-print('='*50)
+print('acc : ',knnmodel.score(iris_train_x[['petal_len', 'petal_wid']].values, 
+                     iris_train_x['target'].values))  # 정확도
+print('='*80)
 
-# 모델 예측
-# 0 : setosa, 1 : versicolor, 2 : virginica
-print(knnmodel.predict([[1.5, 0.2], [4.5, 1.5], [5.5, 2.0]]))
+# 새로운 데이터 붓꽃 분류 (예측)
+pred = knnmodel.predict([[5.9, 2.3], [3.4, 1.8], [5.4, 2.2]])  # 0 : setosa, 1 : versicolor, 2 : virginica
+print([iris['target_names'][int(i)] for i in pred])
