@@ -6,4 +6,3 @@ y_pred = [0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 3, 3, 1]
 
 print(confusion_matrix(y_true, y_pred))  # 혼동행렬(배열) 생성해서 출력
 print(classification_report(y_true, y_pred))
-
