@@ -37,47 +37,16 @@ print("=" * 80)
 train_x, test_x, train_y, test_y = train_test_split(fish_data, fish_target, 
                                                     stratify=fish_target, random_state=42)
 
-# print(train_x[:5])  # shuffle 되어있음
-# print(len(train_x), len(train_y))
-# print(len(test_x), len(test_y))
+mean = np.mean(train_x, axis=0)  # 평균 계산
+print(mean)
+std = np.std(train_x, axis=0)
+print(std)
+# 표준점수 정규화 공식 ==> (각 특성데이터 - 평균) / 표준편차 ==> 정규 분포
 
-# train/test 분할한 데이터셋 준비 완료
+train_scaled = (train_x - mean) / std
+newdata = ([25, 150] - mean) / std
+print(newdata)
 
-# 모델 준비
-knnmodel = KNeighborsClassifier()  # KNN 분류모델 객체 생성
-
-# 모델 학습 ==> train 데이터만 활용
-knnmodel.fit(train_x, train_y)
-
-# 모델 성능 평가 ==> test 데이터 활용
-print("acc : ", knnmodel.score(test_x, test_y))
-
-# 모델 예측
-pred = knnmodel.predict([[25, 150]])  # 임의의 한 데이터를 예측할때도 2차원 배열 형태로 전달
-print(pred)  # 1 : bream, 0 : smelt
-for idx, item in enumerate(pred):
-    if item == 1.0:
-        print(f"{idx+1}번째 데이터 : bream")
-    else:
-        print(f"{idx+1}번째 데이터 : smelt")
-
-# [25, 150] 데이터 기준 거리가 가까운 k개의 데이터 index 반환
-distance, index = knnmodel.kneighbors([[25, 150]])
-print("distance : ", distance)
-print("index    : ", index)
-
-print(train_x)
-# 현재 train_x 처럼 데이터의 범주가 클 경우 KNN 모델에 문제가 발생할 수 있음
-# ==> train_x 데이터의 범주를 정규화 시켜서 사용해야함
-
-# 데이터의 특성을 정규화
-# 표준점수 정규화 ==> standard scaler
-
-# plt.scatter(train_x[index,0], train_x[index,1], marker='v', c='red', s=120)  # 데이터 기준
-# fancy indexing : index 배열에 담긴 인덱스 번호에 해당하는 train_x 데이터 시각화
-
-# plt.scatter(train_x[:, 0], train_x[:, 1])  # train 데이터 시각화
-# plt.scatter(25, 150, marker="^", c="green", s=120)  # 예측할 데이터 시각화
-# plt.xlabel("length")
-# plt.ylabel("weight")
-# plt.savefig("fish_data.jpeg")
+plt.scatter(train_scaled[:,0], train_scaled[:,1])
+plt.scatter(newdata[0], newdata[1], marker='D', c='red')
+plt.savefig('knn_newfish.jpeg')
