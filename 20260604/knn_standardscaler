@@ -39,7 +39,7 @@ train_x, test_x, train_y, test_y = train_test_split(fish_data, fish_target,
 
 mean = np.mean(train_x, axis=0)  # 평균 계산
 print(mean)
-std = np.std(train_x, axis=0)
+std = np.std(train_x, axis=0)  # 표준편차 계산
 print(std)
 # 표준점수 정규화 공식 ==> (각 특성데이터 - 평균) / 표준편차 ==> 정규 분포
 
