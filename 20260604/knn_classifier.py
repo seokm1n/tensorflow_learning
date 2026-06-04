@@ -39,12 +39,12 @@ knnmodel = KNeighborsClassifier()
 plt.scatter(bream_length, bream_weight)  # bream 데이터 시각화
 plt.scatter(smelt_length, smelt_weight)  # smelt 데이터 시각화
 # 예측할 데이터 시각화
-plt.scatter(30, 420, marker="^")
-plt.scatter(9, 12, marker="D", color="blue")
+plt.scatter(30, 420, marker='^')
+plt.scatter(9, 12, marker='D', color='blue')
 
-plt.xlabel("length")
-plt.ylabel("weight")
-plt.savefig("fishdata.jpeg")
+plt.xlabel('length')
+plt.ylabel('weight')
+plt.savefig('fishdata.jpeg')
 
 # # 모델 학습
 # knnmodel.fit(fish_data, fish_target)

@@ -58,6 +58,6 @@ print(new_pred)
 for i in range(3):
     plt.scatter(iris_train_x.loc[iris_train_x['target']==i,:]['petal_len'],
                 iris_train_x.loc[iris_train_x['target']==i,:]['petal_wid'])
-plt.scatter(5.9, 2.3, marker='^', color='blue')  # 새로운 데이터 위치 출력
+plt.scatter(5.0, 1.7, marker='*', c='blue')  # 새로운 데이터 위치 출력
 plt.savefig('iris.jpeg')
 
