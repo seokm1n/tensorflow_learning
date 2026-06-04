@@ -47,11 +47,12 @@ print('='*80)
 
 # 새로운 데이터 붓꽃 분류 (예측)
 pred = knnmodel.predict([[5.9, 2.3], [3.4, 1.8], [5.4, 2.2]])  # 0 : setosa, 1 : versicolor, 2 : virginica
-for i in pred:
-    print(iris['target_names'][int(i)])
+for idx, item in enumerate(pred):
+    print(idx+1, '번째 데이터 : ', iris['target_names'][int(item)])
+print('='*80)
 
 new_pred = knnmodel.predict([[5.9, 2.3]])
-print(new_pred)
+print('new_pred 에측값 : ', new_pred)
 # petal_len = 5.9, petal_wid = 2.3인 위치를 scatter(), '^' 마커로 출력, 색상 blue
 # 동시에 위 scatter으로 출력한 모든 데이터 위에 5.9, 2.3 위치를 출력
 
@@ -60,4 +61,3 @@ for i in range(3):
                 iris_train_x.loc[iris_train_x['target']==i,:]['petal_wid'])
 plt.scatter(5.0, 1.7, marker='*', c='blue')  # 새로운 데이터 위치 출력
 plt.savefig('iris.jpeg')
-
