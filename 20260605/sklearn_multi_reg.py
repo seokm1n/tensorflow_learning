@@ -29,26 +29,31 @@ train_x = train_x.reshape(-1,1)  # 넘파이 배열 크기 자동 지정 : -1, �
 test_x = test_x.reshape(-1,1)
 print(train_x.shape, test_x.shape)
 
+# 길이(x)에 제곱한 특성을 추가
+train_poly = np.column_stack((train_x**2, train_x))
+test_poly = np.column_stack((test_x**2, test_x))
+print(train_poly.shape, test_poly.shape)
+
 # 모델 준비
-lrmodel = LinearRegression()  # 선형회귀 모델 준비
+multi_lrmodel = LinearRegression()
 
 # 모델 학습
-lrmodel.fit(train_x, train_y)  # 가중치, 편향 정해짐
-# lrmodel.coef_ ==> 가중치 w, 기울기  # 리스트 --> 여러개일 수도 있음
-# lrmodel.intercept_ ==> 편향 b, 절편
-print('coef_ : ', lrmodel.coef_, 'intercept_ : ', lrmodel.intercept_)
+multi_lrmodel.fit(train_poly, train_y)  # ==> 최적의 가중치, 편향 찾아짐
 
 # 모델 성능 평가
-print('score : ', lrmodel.score(test_x, test_y))  # 0.824
+print('acc : ', multi_lrmodel.score(test_poly, test_y))
 
-# 모델 예측
-pred = lrmodel.predict([[30]])
-print('pred : ', pred)  # 461.5
-# print(lrmodel.coef_ * 30 + lrmodel.intercept_)  # wx + b 공식 적용 ==> predict()
+# 가중치와 편향 출력
+print('w : ', multi_lrmodel.coef_, 'b : ', multi_lrmodel.intercept_)
 
-plt.plot([15,70],[lrmodel.coef_ * 15 + lrmodel.intercept_, lrmodel.coef_ * 70 + lrmodel.intercept_])
+# 예측
+# 길이가 30인 농어의 무게 예측
+pred = multi_lrmodel.predict([[30**2, 30]])
+print('pred : ', pred)  # 382.2
+print(multi_lrmodel.coef_[0] * 900 + multi_lrmodel.coef_[1] * 30 + multi_lrmodel.intercept_)
+
 plt.scatter(train_x, train_y)
-plt.scatter(70, lrmodel.predict([[70]]), marker='^', c='red', s=120)
+xpoint = np.arange(15,70)
+plt.plot(xpoint, multi_lrmodel.coef_[0] * xpoint**2 + multi_lrmodel.coef_[1] * xpoint + multi_lrmodel.intercept_)
+plt.scatter(50, multi_lrmodel.predict([[50**2, 50]]), marker='^', c='red')
 plt.show()
-
-# print(lrmodel.predict([[3]]))  # 무게 : -591.9 ==> 오류
