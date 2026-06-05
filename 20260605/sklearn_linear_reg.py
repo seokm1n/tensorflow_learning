@@ -46,6 +46,7 @@ pred = lrmodel.predict([[30]])
 print(pred)  # 461.5
 print(lrmodel.coef_ * 30 + lrmodel.intercept_)  # wx + b 공식 적용 ==> predict()
 
+plt.figure(figsize=(15, 12))
 plt.plot([15,50],[lrmodel.coef_ * 15 + lrmodel.intercept_, lrmodel.coef_ * 50 + lrmodel.intercept_])
 plt.scatter(train_x, train_y)
 plt.savefig("linear.jpeg")
