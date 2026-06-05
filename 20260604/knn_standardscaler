@@ -47,9 +47,18 @@ print(std)
 # 표준점수 정규화 공식 ==> (각 특성데이터 - 평균) / 표준편차 ==> 정규 분포
 
 train_scaled = (train_x - mean) / std
+
+# 새로운 데이터(test 데이터)도 train 데이터에 적용한 정규화 공식을 동일 적용시켜서 활용
 newdata = ([25, 150] - mean) / std
 print(newdata)
 
-plt.scatter(train_scaled[:,0], train_scaled[:,1])
-plt.scatter(newdata[0], newdata[1], marker='D', c='red')
-plt.savefig('knn_newfish.jpeg')
+# 스케일 정규화 된 특성 데이터(입력데이터)를 이용해서 모델 학습
+# 모델 준비
+knnmodel = KNeighborsClassifier()  # 객체 생성 --> 모델 생성
+
+# 모델 학습
+knnmodel.fit()
+
+# plt.scatter(train_scaled[:,0], train_scaled[:,1])
+# plt.scatter(newdata[0], newdata[1], marker='D', c='red')
+# plt.savefig('knn_newfish.jpeg')
