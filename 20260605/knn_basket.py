@@ -31,9 +31,7 @@ df.drop(["2P", "AST", "STL"], axis=1, inplace=True)
 print(df.head())
 print("=" * 80)
 
-train, test = train_test_split(
-    df, test_size=0.2, random_state=45
-)  # 20 비율로 훈련셋, 테스트셋 분리
+train, test = train_test_split(df, test_size=0.2, random_state=45)  # 20 비율로 훈련셋, 테스트셋 분리
 print(train.shape[0])  # 80
 print(test.shape[0])  # 20
 print("=" * 80)
@@ -59,6 +57,8 @@ for k in k_list:
     knn = KNeighborsClassifier(n_neighbors=k)
     scores = cross_val_score(knn, x_train, y_train.values.ravel(), cv=10, scoring="accuracy")
     cross_validation_scores.append(scores.mean())
+    print('k : ', k, '\n' , scores)
+    print("-"*80)
 
 print(cross_validation_scores)
 print("=" * 80)
@@ -69,7 +69,7 @@ plt.ylabel("Accuracy")
 plt.show()
 
 # 훈련 / 테스트데이터분리
-train, test = train_test_split(df, test_size=0.2, random_state=49)  # 20 비율로 훈련셋, 테스트셋 분리
+train, test = train_test_split(df, test_size=0.2, random_state=45)  # 20 비율로 훈련셋, 테스트셋 분리
 print(train.shape[0])  # 80
 print(test.shape[0])  # 20
 print("=" * 80)
@@ -93,7 +93,8 @@ print('예측 결과 : ', pred)
 print("=" * 80)
 
 # 모델 예측 정확도 출력
-# print(y_test.values) # numpy (20,1) 2차원 배열   
+# print(y_test.values) # numpy (20,1) 2차원 배열  
+# ravel() ==> 2차원 -> 1차원
 # print(y_test.values.ravel()) # numpy 1차원 배열 데이터
 # accuracy_score() : confusion matrix(혼동행렬) 활용 정확도 계산
 print('accuracy : ' + str( accuracy_score(y_test.values.ravel(), pred)) ) # 0.95
@@ -102,4 +103,4 @@ print("=" * 80)
 
 # 실제데이터와예측데이터 Dataframe 변환 출력
 comparison = pd.DataFrame({'prediction':pred, 'truth value':y_test.values.ravel()})
-print(comparison.head())
+print(comparison)
