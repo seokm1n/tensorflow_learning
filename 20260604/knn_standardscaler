@@ -37,6 +37,9 @@ print("=" * 80)
 train_x, test_x, train_y, test_y = train_test_split(fish_data, fish_target, 
                                                     stratify=fish_target, random_state=42)
 
+# 모델에 투입하기 전에 항상 특성데이터를 정규화해서 사용해야함
+# ==> 표준점수 정규화 ==> standardscaler()
+
 mean = np.mean(train_x, axis=0)  # 평균 계산
 print(mean)
 std = np.std(train_x, axis=0)  # 표준편차 계산
