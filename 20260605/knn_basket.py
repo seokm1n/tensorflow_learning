@@ -68,7 +68,7 @@ plt.xlabel("number of k")
 plt.ylabel("Accuracy")
 plt.show()
 
-# 훈련 / 테스트데이터분리
+# train/test 데이터 분리
 train, test = train_test_split(df, test_size=0.2, random_state=45)  # 20 비율로 훈련셋, 테스트셋 분리
 print(train.shape[0])  # 80
 print(test.shape[0])  # 20
@@ -87,7 +87,7 @@ knn.fit(x_train, y_train.values.ravel())
 x_test = test[["3P", "BLK", "TRB"]]  # x_test 데이터로 예측
 y_test = test[["Pos"]]  # 분류 실제 값
 
-# 테스트데이터예측시작
+# 테스트 데이터 예측 시작
 pred = knn.predict(x_test)
 print('예측 결과 : ', pred)
 print("=" * 80)
@@ -101,6 +101,6 @@ print('accuracy : ' + str( accuracy_score(y_test.values.ravel(), pred)) ) # 0.95
 print('acc : ', knn.score(x_test, y_test)) # 0.95
 print("=" * 80)
 
-# 실제데이터와예측데이터 Dataframe 변환 출력
+# 실제 데이터와 예측 데이터 Dataframe 변환 출력
 comparison = pd.DataFrame({'prediction':pred, 'truth value':y_test.values.ravel()})
 print(comparison)
