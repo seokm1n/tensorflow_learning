@@ -133,7 +133,7 @@ def display_decision_surface(clf, x, y):
                     label = le.classes_[i], c=color, edgecolors='black', s=150)
 
     # 창천동
-    plt.scatter(126.9368, 37.5568, c="black", marker="v", s=200)
+    plt.scatter(126.9368, 37.5568, c="black", marker="D", s=200)
 
     plt.title('Decision surface of a decision tree', fontsize=16)
     plt.legend(loc='best', fontsize=14)
