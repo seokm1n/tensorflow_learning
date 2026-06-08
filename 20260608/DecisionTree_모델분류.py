@@ -91,6 +91,11 @@ print(y_encoded)
 print("=" * 80)
 # 알파벳 순으로 다른 클래스 자동 분류
 print(le.classes_)  # 어떤것을 0으로, 어떤것을 1로, ... 등 변환했는지 체크
+print("=" * 80)
+
+test_y_encoded = le.fit_transform(test_y.values.ravel())
+print(test_y_encoded)
+print("=" * 80)
 
 # 모델 설계 (의사결정 트리 모델)
 dt_model = tree.DecisionTreeClassifier(criterion='entropy', random_state=70, max_depth=4,
@@ -99,6 +104,8 @@ dt_model = tree.DecisionTreeClassifier(criterion='entropy', random_state=70, max
 # 모델 학습
 clf = dt_model.fit(train_x.values, y_encoded)
 
+# 성능 평가
+print('acc : ', dt_model.score(test_x, test_y_encoded))
 
 # 창천동 위도, 경도
 print("=" * 80)
