@@ -58,7 +58,7 @@ for k in k_list:
     scores = cross_val_score(knn, x_train, y_train.values.ravel(), cv=10, scoring="accuracy")
     cross_validation_scores.append(scores.mean())
     print('k : ', k, '\n' , scores)
-    print("-"*80)
+    print("="*80)
 
 print(cross_validation_scores)
 print("=" * 80)
