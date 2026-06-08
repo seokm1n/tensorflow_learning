@@ -74,3 +74,40 @@ print(
 # 예측
 pred = svm_model.predict([[4.7, 1.7]])
 print(pred)
+
+# 산점도 시각화
+lnames = iris["target_names"]  # 꽃 이름 정보
+markers = ["o", "^", "s"]  # 표시할 마커 리스트
+colors = ["blue", "green", "red"]  # 표시할 마커 색상
+
+# X, Y 좌표(꽃잎 길이, 꽃잎 너비) 학습(train) 데이터 scatter 출력
+for i in set(train_y["target"]):
+    idx = np.where(train_y["target"] == i)  # np.where() ==> 특정 데이터 추출
+    print(idx[0])
+    # iloc ==> FancyIndexing으로 train.iloc[idx[0]], trainx.iloc[idx] 둘다 가능
+    plt.scatter(
+        train_x.iloc[idx[0]]["petal_len"],
+        train_x.iloc[idx[0]]["petal_wd"],
+        c=colors[int(i)],
+        marker=markers[int(i)],
+        label=lnames[int(i)] + "(train)",
+        s=80,
+        alpha=0.3,
+    )
+
+# X, Y 좌표(꽃잎 길이, 꽃잎 너비) 테스트(test) 데이터 scatter 출력
+for i in set(test_y["target"]):
+    idx = np.where(test_y["target"] == i)
+    print(idx[0])
+    plt.scatter(
+        test_x.iloc[idx[0]]["petal_len"],
+        test_x.iloc[idx[0]]["petal_wd"],
+        marker=markers[int(i)],
+        label=lnames[int(i)] + "(train)",
+        s=130,
+        edgecolors="black",  # 경계선 색
+        facecolors="none",  # 속을 비움(색칠 x)
+    )
+
+plt.legend(loc="best")
+plt.show()
