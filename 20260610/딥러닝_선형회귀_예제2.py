@@ -77,13 +77,13 @@ print(multi_model.evaluate(test_poly, test_y)[1])  # mae : 37.278
 
 # scatter(), 회귀선 출력
 
-# x_line = np.linspace(train_x.min(), train_x.max(), 200).reshape(-1, 1)
+x_line = np.linspace(train_x.min(), train_x.max(), 200).reshape(-1, 1)
 
-# x_line_poly = np.column_stack((x_line**2, x_line))
-# x_line_poly = scaler.transform(x_line_poly)
+x_line_poly = np.column_stack((x_line**2, x_line))
+x_line_poly = scaler.transform(x_line_poly)
 
-# pred_line = multi_model.predict(x_line_poly)
+pred_line = multi_model.predict(x_line_poly)
 
-# plt.scatter(train_x, train_y)
-# plt.plot(x_line, pred_line)
-# plt.savefig("linear_perch.jpeg")
+plt.scatter(train_x, train_y)
+plt.plot(x_line, pred_line)
+plt.savefig("linear_perch.jpeg")
