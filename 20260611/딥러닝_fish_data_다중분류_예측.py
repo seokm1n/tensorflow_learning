@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import load_model  # type: ignore
 
+np.set_printoptions(precision=8, suppress=True)
+
 # scaler 로드
 scaler = joblib.load("/home/sm/tf_env/20260611/fish_scaler.pkl")
 
@@ -25,9 +27,13 @@ new_x_scaled = scaler.transform(new_x)
 # 예측
 pred = fish_best_model.predict(new_x_scaled)
 
-fishclass = ["Bream", "Parkki", "Perch", "Pike", "Roach", "Smelt", "Whitefish"]
+fishclass = np.array(["Bream", "Parkki", "Perch", "Pike", "Roach", "Smelt", "Whitefish"])
+
+print(np.argmax(pred, axis=1))  # 최대값의 인덱스로 이루어진 넘파이 배열
 
 # 결과 출력
 for i, p in enumerate(pred):
     print(f"물고기{i+1} 종류 : {fishclass[np.argmax(p)]}")
     print(f"확률 : {p[np.argmax(p)]:.4f}")
+
+print(fishclass[np.argmax(pred, axis=1)])

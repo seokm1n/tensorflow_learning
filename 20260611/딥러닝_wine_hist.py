@@ -6,7 +6,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras import optimizers  # type: ignore
 from tensorflow.keras.models import Sequential  # type: ignore
-from tensorflow.keras.layers import Dense  # type: ignore
+from tensorflow.keras.layers import Dense, Dropout  # type: ignore
+
 
 # 출력 옵션 제어
 pd.set_option("display.max_rows", 1000)
@@ -43,16 +44,9 @@ wine_df_y = wine_df[["style"]]
 print(wine_df_y.head())
 print("=" * 80)
 
-train_x, test_x, train_y, test_y = train_test_split(
-    wine_df_x, wine_df_y, random_state=42
+train_x, val_x, train_y, val_y = train_test_split(
+    wine_df_x, wine_df_y, random_state=42, test_size=0.2
 )
-
-scaler = StandardScaler()
-train_scaled = scaler.fit_transform(train_x)
-test_scaled = scaler.transform(test_x)
-
-# scaler 저장
-joblib.dump(scaler, "/home/sm/tf_env/20260611/wine_scaler.pkl")
 
 # 딥러닝 모델 설계
 
@@ -60,6 +54,7 @@ model = Sequential()
 
 model.add(Dense(units=32, input_dim=12, activation="leaky_relu"))
 model.add(Dense(units=64, activation="leaky_relu"))
+model.add(Dropout(0.3))
 model.add(Dense(units=32, activation="leaky_relu"))
 model.add(Dense(units=1, activation="sigmoid"))
 
@@ -67,28 +62,21 @@ model.add(Dense(units=1, activation="sigmoid"))
 model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 # 모델 학습
-# model.fit(train_scaled, train_y, batch_size=64, epochs=200, verbose=1)
+history = model.fit(train_x, train_y, validation_data=(val_x, val_y), batch_size=64, epochs=200, verbose=1)
 
-# score = model.evaluate(test_scaled, test_y)
-# print("정확도:", score[1])
+# print(history.history.keys())
 
-# model.save("wine_best_model.keras")  # 모델 전체(네트워크 구조 및 가중치) 저장
+print(history.history['loss'])
+print(history.history['accuracy'])
+print(history.history['val_loss'])
+print(history.history['val_accuracy'])
 
-from tensorflow.keras.callbacks import ModelCheckpoint # type: ignore
+plt.plot(history.history['loss'])  # 훈련셋 손실
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_loss'])  # 검증셋 손실
+plt.plot(history.history['val_accuracy'])
 
-checkpointer = ModelCheckpoint(
-    filepath="/home/sm/tf_env/20260611/wine_best.keras",
-    monitor="val_loss",
-    verbose=1,
-    save_best_only=True,
-)
-
-model.fit(
-    train_x,
-    train_y,
-    validation_data=(test_x, test_y),
-    epochs=100,
-    batch_size=32,
-    verbose=0,
-    callbacks=[checkpointer]
-)
+plt.xlabel('epoch')
+plt.ylabel('loss')
+plt.legend(['train', 'val'])
+plt.show()

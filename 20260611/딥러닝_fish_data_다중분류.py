@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from tensorflow.keras.models import Sequential  # type: ignore
 from tensorflow.keras.layers import Dense  # type: ignore
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.utils import to_categorical  # type: ignore
 
 np.set_printoptions(
     precision=8, suppress=True
@@ -23,12 +25,8 @@ y_encoded = le.fit_transform(fish_target)  # 타깃이 수치 형태로 변환�
 print(le.classes_)  # 타깃데이터 클래스 목록
 
 # categorical_crossentropy() ==> 정답을 원-핫 인코딩 상태로
-
-from tensorflow.keras.utils import to_categorical  # type: ignore
-
 y_onehot = to_categorical(y_encoded)
 
-from sklearn.model_selection import train_test_split
 
 train_x, test_x, train_y, test_y = train_test_split(
     fish_train, y_onehot, random_state=42

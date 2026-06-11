@@ -19,7 +19,7 @@ new_x = pd.DataFrame(
     ]
 )
 
-new_x_scaled = scaler.fit_transform(new_x)
+new_x_scaled = scaler.transform(new_x)
 
 # 예측
 pred = wine_best_model.predict(new_x_scaled)
