@@ -74,7 +74,7 @@ model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"]
 
 # model.save("wine_best_model.keras")  # 모델 전체(네트워크 구조 및 가중치) 저장
 
-from tensorflow.keras.callbacks import ModelCheckpoint # type: ignore
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping  # type: ignore
 
 checkpointer = ModelCheckpoint(
     filepath="/home/sm/tf_env/20260611/wine_best.keras",
@@ -82,13 +82,15 @@ checkpointer = ModelCheckpoint(
     verbose=1,
     save_best_only=True,
 )
+# 조기종료
+earlystop = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
 
-model.fit(
+history = model.fit(
     train_x,
     train_y,
     validation_data=(test_x, test_y),
     epochs=100,
     batch_size=32,
     verbose=0,
-    callbacks=[checkpointer]
+    callbacks=[checkpointer, earlystop],
 )
