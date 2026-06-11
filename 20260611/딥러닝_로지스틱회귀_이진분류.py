@@ -1,3 +1,4 @@
+import joblib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -41,6 +42,9 @@ from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 train_scaled = scaler.fit_transform(train_x)
 test_scaled = scaler.transform(test_x)
+
+# scaler 저장
+joblib.dump(scaler, "/home/sm/tf_env/20260611/titanic_scaler.pkl")
 
 print(train_scaled[:5])
 print("=" * 80)
