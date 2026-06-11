@@ -25,9 +25,8 @@ print("=" * 80)
 
 from sklearn.model_selection import train_test_split
 
-train_x, test_x, train_y, test_y = train_test_split(
-    titanic_df_x, titanic_df_y, random_state=47
-)
+train_x, test_x, train_y, test_y = train_test_split(titanic_df_x, titanic_df_y, 
+                                                    random_state=42)
 
 print(train_x[:5])
 print("=" * 80)
