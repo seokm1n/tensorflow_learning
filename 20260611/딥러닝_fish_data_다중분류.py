@@ -7,9 +7,7 @@ from tensorflow.keras.layers import Dense  # type: ignore
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical  # type: ignore
 
-np.set_printoptions(
-    precision=8, suppress=True
-)  # 과학적 표기 대신 소수점 이하 8자리까지 표현
+np.set_printoptions(precision=8, suppress=True)  # 과학적 표기 대신 소수점 이하 8자리까지 표현
 np.set_printoptions(threshold=np.inf)  # 무한으로 출력
 
 fishdf = pd.read_csv("/home/sm/tf_env/20260611/fish_data.csv")
