@@ -7,7 +7,7 @@ from tensorflow.keras.models import load_model  # type: ignore
 np.set_printoptions(precision=8, suppress=True)  # 과학적 표기 대신 소수점 이하 8자리까지 표현
 np.set_printoptions(threshold=np.inf)  # 무한으로 출력
 
-img = cv2.imread("./20260612/bag.jpg", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("./20260612/man.jpg", cv2.IMREAD_GRAYSCALE)
 # print(img)
 print(img.shape)  # 330*330 ==> 28*28
 # 원 이미지 사이즈를 학습한 모델의 입력 사이즈로 변경(맞춰줘야함)
