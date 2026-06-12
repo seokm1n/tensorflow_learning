@@ -43,13 +43,11 @@ wine_df_y = wine_df[["style"]]
 print(wine_df_y.head())
 print("=" * 80)
 
-train_x, test_x, train_y, test_y = train_test_split(
-    wine_df_x, wine_df_y, random_state=42
-)
+train_x, val_x, train_y, val_y = train_test_split(wine_df_x, wine_df_y, random_state=42)
 
 scaler = StandardScaler()
 train_scaled = scaler.fit_transform(train_x)
-test_scaled = scaler.transform(test_x)
+test_scaled = scaler.transform(val_x)
 
 # scaler 저장
 joblib.dump(scaler, "/home/sm/tf_env/20260611/wine_scaler.pkl")
@@ -63,34 +61,48 @@ model.add(Dense(units=64, activation="leaky_relu"))
 model.add(Dense(units=32, activation="leaky_relu"))
 model.add(Dense(units=1, activation="sigmoid"))
 
+
 # 모델 compile()
 model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 # 모델 학습
 # model.fit(train_scaled, train_y, batch_size=64, epochs=200, verbose=1)
 
-# score = model.evaluate(test_scaled, test_y)
-# print("정확도:", score[1])
 
-# model.save("wine_best_model.keras")  # 모델 전체(네트워크 구조 및 가중치) 저장
-
+# val 데이터를 가지고 loss 개선됐을때 저장, 아니면 그냥 넘어감
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping  # type: ignore
 
-checkpointer = ModelCheckpoint(
+checkpointer_cb = ModelCheckpoint(
     filepath="/home/sm/tf_env/20260611/wine_best.keras",
     monitor="val_loss",
     verbose=1,
     save_best_only=True,
 )
 # 조기종료
-earlystop = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+earlystop_cb = EarlyStopping(monitor="val_loss", patience=4, restore_best_weights=True)
 
 history = model.fit(
     train_x,
     train_y,
-    validation_data=(test_x, test_y),
-    epochs=100,
+    validation_data=(val_x, val_y),
+    epochs=1000,
     batch_size=32,
     verbose=0,
-    callbacks=[checkpointer, earlystop],
+    callbacks=[checkpointer_cb, earlystop_cb],
 )
+
+# train 데이터 역전파 -> 가중치 업데이트 ==> 평가 x
+# test 데이터 순전파 -> 성능평가, 예측
+
+# score = model.evaluate(test_scaled, test_y)
+# print("정확도:", score[1])
+
+# model.save("wine_best_model.keras")  # 모델 전체(네트워크 구조 및 가중치) 저장
+
+val_loss = history.history['val_loss']
+train_loss = history.history['loss']
+
+plt.plot(val_loss, c='red')
+plt.plot(train_loss, c='blue')
+
+plt.show()
