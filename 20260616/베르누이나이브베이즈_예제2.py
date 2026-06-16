@@ -6,14 +6,12 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import accuracy_score
 
 # 출력 옵션 제어
-pd.set_option("display.max_rows", 1000)
-pd.set_option("display.max_columns", 500)
-pd.set_option("display.width", 1000)
-pd.set_option("max_colwidth", 1000)
+# pd.set_option("display.max_rows", 1000)
+# pd.set_option("display.max_columns", 500)
+# pd.set_option("display.width", 1000)
+# pd.set_option("max_colwidth", 1000)
 
-np.set_printoptions(
-    precision=8, suppress=True
-)  # 과학적 표기 대신 소수점 이하 8자리까지 표현
+np.set_printoptions(precision=8, suppress=True)  # 과학적 표기 대신 소수점 이하 8자리까지 표현
 np.set_printoptions(threshold=np.inf)  # 무한으로 출력
 
 spamdf = pd.read_csv("/home/sm/tf_env/20260616/spam.csv")
@@ -61,10 +59,13 @@ temp_mail = cv.transform(
 )
 
 pred = bnb.predict(temp_mail)
+prob = bnb.predict_proba(temp_mail)
 print(pred)
-
+print(prob)
 for idx, item in enumerate(pred):
     if item == 1:
-        print(f"{idx + 1} 번째 메일은 스팸")
+        print(f"{idx + 1} 번째 메일은 스팸", end="")
+        print(f"(확률 : {prob[idx][1]*100:.2f}%)")
     else:
-        print(f"{idx + 1} 번째 메일은 정상")
+        print(f"{idx + 1} 번째 메일은 정상", end="")
+        print(f"(확률 : {prob[idx][0]*100:.2f}%)")
