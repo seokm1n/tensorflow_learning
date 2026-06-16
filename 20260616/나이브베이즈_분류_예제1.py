@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.datasets import load_iris # 붓꽃 데이터셋
 from sklearn.model_selection import train_test_split # 분리할때 사용
 
-# 나이브 베이즈 ==> 조건부 확률로 분류를 하는 모델
+# 나이브 베이즈 ==> 조건부 확률로 분류를 하는 모델 P(B|A) = P(A|B) * P(A) / P(B)
 from sklearn.naive_bayes import GaussianNB # 데이터특징 가우시안 정규분포를 취할때
 # 분류모델로 사용 ==> GaussianNB
 from sklearn import metrics # 혼동행렬
