@@ -22,14 +22,14 @@ predicted = RFmodel.predict(features[-5:])
 print('labels : ', labels[-5:])
 print('pre : ', predicted)
 
-tempdata = [0.,  0., 10., 14.,  8.,  1., 0., 0., 
-            0.,  2., 16., 14.,  6., 15., 6., 0.,
-            0.,  0., 12., 15.,  8., 15., 0., 0., 
-            0., 15.,  5., 16., 16., 10., 0., 0.,
-            0.,  0., 12., 15., 13., 12., 0., 0.,
-            0.,  4., 16.,  5.,  4., 16., 6., 0.,
-            0.,  8., 16., 10.,  8., 16., 8., 1.,
-            0.,  1.,  7., 12., 14., 12., 1., 0.]
+tempdata = [0.,  2., 10., 14.,  8., 11., 9., 3., 
+            0.,  2., 10., 14.,  6., 15., 9., 3.,
+            0.,  2.,  2.,  2.,  8., 15., 9., 3., 
+            0.,  0.,  0.,  0.,  2., 11., 9., 0.,
+            0.,  0.,  0.,  2., 13., 12., 0., 0.,
+            0.,  0.,  0.,  8.,  9.,  5., 0., 0.,
+            0.,  0.,  2., 10.,  8.,  0., 0., 0.,
+            0.,  2.,  7., 12., 14.,  0., 0., 0.]
 
 temparr = np.array(tempdata)  # reshape 하기위해 numpy array로 변환
 print(temparr)
@@ -37,5 +37,5 @@ temp_pred = RFmodel.predict([temparr])
 
 print('temp_pred : ', temp_pred)
 
-plt.imshow(temparr.reshape(8,8))  # 디폴트 색상 virdis
+plt.imshow(temparr.reshape(8,8), cmap='gray')  # 디폴트 색상 virdis
 plt.show()
