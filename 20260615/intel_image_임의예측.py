@@ -25,5 +25,5 @@ classes = ["buildings", "forest", "glacier", "mountain", "sea", "street"]
 
 pred_label = np.argmax(pred[0])
 
-print("예측 :", classes[pred_label])
+print("예측결과 :", classes[pred_label])
 print("확률 :", pred[0][pred_label])
