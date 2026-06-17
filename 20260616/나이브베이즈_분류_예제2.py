@@ -1,4 +1,3 @@
-import pandas as pd
 from sklearn.datasets import load_iris # 붓꽃 데이터셋
 from sklearn.model_selection import train_test_split # 분리할때 사용
 

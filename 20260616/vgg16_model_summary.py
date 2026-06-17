@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from tensorflow.keras.applications import vgg16  # type: ignore
 from tensorflow.keras.preprocessing.image import load_img, img_to_array  # type: ignore
 
