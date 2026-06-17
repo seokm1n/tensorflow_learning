@@ -20,7 +20,7 @@ print(file_info_list)
 
 img = load_img(file_info_list[6], target_size=(224,224))
 image = img_to_array(img)  # 이미지 객체를 넘파이 배열로 변경
-print("load image array : ")
+# print("load image array : ")
 # print(image) # rgb(255, 255, 255) : 흰색, rgb(0, 0, 0) : 검정색
 # print(image.shape) # (224, 224, 3)
 # vgg16 은 (None, 224, 224, 3) 입력 형태를 기대함으로
@@ -30,7 +30,7 @@ image = image.reshape( ( 1, 224, 224, 3) )
 # Vgg 모델 입력을 위한 픽셀값 조정 전처리
 # -255 ~ 255 사이값으로 정규화, rgb -> bgr 순서로 바꿈
 image = vgg16.preprocess_input(image)
-print('preprocess image : ')
+# print('preprocess image : ')
 # print(image)
 # 이미지 분류 예측
 pred = model.predict(image)
