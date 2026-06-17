@@ -1,4 +1,6 @@
 import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator  # type: ignore
 from tensorflow.keras.models import Sequential  # type: ignore
 from tensorflow.keras.layers import Dropout, Flatten, Dense  # type: ignore
@@ -67,17 +69,17 @@ newmodel.add(Dropout(0.3))
 newmodel.add(Dense(units=2, activation="softmax"))  # 2class 분류
 
 newmodel.summary()
-
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)  # 0.00001
 newmodel.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 print(int(np.ceil(train_data_gen.samples / train_data_gen.batch_size)))  # ==> batch_size = 46
 # print(train_data_gen.samples) # 181 개 학습 이미지 샘플
 # print(train_data_gen.batch_size) # 4 batch size
 
-checkpoint_cb = ModelCheckpoint(filepath="/home/sm/tf_env/20260617/covid19_newmodel.keras", 
-                                monitor="val_loss", verbose=1, save_best_only=True,)
+checkpoint_cb = ModelCheckpoint(filepath="/home/sm/tf_env/20260617/covid19_best.keras", 
+                                verbose=1, save_best_only=True,)
 
-earlystopping_cb = EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
+earlystopping_cb = EarlyStopping(patience=5, restore_best_weights=True)
 
 # 모델 훈련
 history = newmodel.fit(
