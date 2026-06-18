@@ -39,50 +39,24 @@ word_size = 11775  # 단어 빈도수 체크 결과에 따른 11775개 단어 �
 tokenizer = Tokenizer(word_size)
 tokenizer.fit_on_texts(train_df["document"])
 
-def predict_single_clause(clause):
-    clean_clause = re.sub(r'[^ㄱ-ㅎㅏ-ㅣ가-힣\s]', '', clause)
-    tokens = okt.morphs(clean_clause, stem=True)
-    tokens = [word for word in tokens if word not in stopwords and word]
-
-    if not tokens:
-        return 0.5
-
-    encoded = tokenizer.texts_to_sequences([tokens])
-    padded = pad_sequences(encoded, maxlen=30)
-    score = float(best_model.predict(padded, verbose=0)[0][0])
-    return score
-
-
 def new_review_predict(review_string):
-    # 문장 부호나 연결어를 기준으로 나누고, 뒤에 있는 문맥에 더 큰 가중치 부여
-    clauses = re.split(
-        r'(?:[.!?]|(?:는데|지만|하지만|그런데|근데|다만|그래도|그치만))',
-        review_string
-    )
-    clauses = [clause.strip() for clause in clauses if clause.strip()]
-
-    if not clauses:
-        clauses = [review_string]
-
-    clause_scores = []
-    weights = []
-
-    for i, clause in enumerate(clauses):
-        score = predict_single_clause(clause)
-        clause_scores.append(score)
-        weights.append((i + 1) / len(clauses))
-
-    final_score = sum(s * w for s, w in zip(clause_scores, weights)) / sum(weights)
-
-    print(f"문장 분절: {clauses}")
-    print(f"분절별 점수: {clause_scores}")
-    print(f"최종 점수: {final_score:.4f}")
-
-    if final_score > 0.5:
-        print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(final_score * 100))
+    new_sentence = re.sub(r'[^ㄱ-ㅎㅏ-ㅣ가-힣\s]','', review_string) # 한국어와 공백 이외의내용삭제
+    new_sentence = okt.morphs(new_sentence, stem=True) # 토큰화
+    new_sentence = [word for word in new_sentence if not word in stopwords] # 불용어제거
+    print(new_sentence) # ['영화', '굿', '잼']
+    # [new_sentence] : 불용어 처리된 단어 리스트를 정수 인코딩 sequences 데이터 형성을 위해 하나로 묶어서([ ]) 변환해 줘야함
+    encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
+    print(encoded) # [[1, 363, 334]]
+    sentence_padding = pad_sequences(encoded, maxlen = 30) # 패딩 적용 동일 길이 Sequences 형성
+    print(sentence_padding)
+    #[[ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0 0 0 1 363 334]]
+    score = float(best_model.predict(sentence_padding) ) # new_sentence 예측
+    if(score > 0.5):
+        print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
     else:
-        print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - final_score) * 100))
-
+        print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
+    
 
 new_review_predict('초반엔 좀 졸렸는데 뒤로 갈수록 나아지더라 ㅋㅋ 배우들 연기력은 진짜 좋았음.')
 new_review_predict('분위기랑 연출은 괜찮았는데 내용이 좀 산만해서 중간에 몇 번은 딴 생각함 ㅠㅠ')
