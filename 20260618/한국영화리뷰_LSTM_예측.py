@@ -39,27 +39,53 @@ word_size = 11775  # 단어 빈도수 체크 결과에 따른 11775개 단어 �
 tokenizer = Tokenizer(word_size)
 tokenizer.fit_on_texts(train_df["document"])
 
-def new_review_predict(review_string):
-    new_sentence = re.sub(r'[^ㄱ-ㅎㅏ-ㅣ가-힣\s]','', review_string) # 한국어와 공백 이외의내용삭제
-    new_sentence = okt.morphs(new_sentence, stem=True) # 토큰화
-    new_sentence = [word for word in new_sentence if not word in stopwords] # 불용어제거
-    print(new_sentence) # ['영화', '굿', '잼']
-    # [new_sentence] : 불용어 처리된 단어 리스트를 정수 인코딩 sequences 데이터 형성을 위해 하나로 묶어서([ ]) 변환해 줘야함
-    encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
-    print(encoded) # [[1, 363, 334]]
-    sentence_padding = pad_sequences(encoded, maxlen = 30) # 패딩 적용 동일 길이 Sequences 형성
-    print(sentence_padding)
-    #[[ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-    # 0 0 0 0 0 0 0 0 0 1 363 334]]
-    score = float(best_model.predict(sentence_padding) ) # new_sentence 예측
-    if(score > 0.5):
-        print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
-    else:
-        print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
-    
+def predict_single_clause(clause):
+    clean_clause = re.sub(r'[^ㄱ-ㅎㅏ-ㅣ가-힣\s]', '', clause)
+    tokens = okt.morphs(clean_clause, stem=True)
+    tokens = [word for word in tokens if word not in stopwords and word]
 
-new_review_predict('이 영화는 초반에는 조금 지루했지만 후반으로 갈수록 이야기가 흥미로워지고 배우들의 연기가 정말 좋았습니다.')
-new_review_predict('영화의 분위기는 좋았지만 전반적으로 스토리가 너무 산만해서 끝까지 집중하기가 어려웠어요.')
-new_review_predict('배우들이 열심히 연기한 점은 좋았는데 전체적인 전개가 너무 느려서 시간이 많이 지루하게 느껴졌습니다.')
-new_review_predict('이 영화는 정말 기대를 많이 했는데 생각보다 너무 실망스러웠고 돈을 내고 보기 아까운 작품이었습니다.')
-new_review_predict('재미있는 장면도 많았고 특히 음악과 촬영이 매우 인상적이어서 다시 보고 싶을 정도로 만족스러웠습니다.')
+    if not tokens:
+        return 0.5
+
+    encoded = tokenizer.texts_to_sequences([tokens])
+    padded = pad_sequences(encoded, maxlen=30)
+    score = float(best_model.predict(padded, verbose=0)[0][0])
+    return score
+
+
+def new_review_predict(review_string):
+    # 문장 부호나 연결어를 기준으로 나누고, 뒤에 있는 문맥에 더 큰 가중치 부여
+    clauses = re.split(
+        r'(?:[.!?]|(?:는데|지만|하지만|그런데|근데|다만|그래도|그치만))',
+        review_string
+    )
+    clauses = [clause.strip() for clause in clauses if clause.strip()]
+
+    if not clauses:
+        clauses = [review_string]
+
+    clause_scores = []
+    weights = []
+
+    for i, clause in enumerate(clauses):
+        score = predict_single_clause(clause)
+        clause_scores.append(score)
+        weights.append((i + 1) / len(clauses))
+
+    final_score = sum(s * w for s, w in zip(clause_scores, weights)) / sum(weights)
+
+    print(f"문장 분절: {clauses}")
+    print(f"분절별 점수: {clause_scores}")
+    print(f"최종 점수: {final_score:.4f}")
+
+    if final_score > 0.5:
+        print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(final_score * 100))
+    else:
+        print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - final_score) * 100))
+
+
+new_review_predict('초반엔 좀 졸렸는데 뒤로 갈수록 나아지더라 ㅋㅋ 배우들 연기력은 진짜 좋았음.')
+new_review_predict('분위기랑 연출은 괜찮았는데 내용이 좀 산만해서 중간에 몇 번은 딴 생각함 ㅠㅠ')
+new_review_predict('배우들은 열심히 한 거 같은데 영화 전체가 너무 느려서 시간 가는 줄 모르고 졸았어요 ^^;')
+new_review_predict('기대 많이 했는데 생각보다 너무 별로였음. 돈 주고 보기 진짜 개짜증 났다 ㅋㅋ')
+new_review_predict('재밌는 장면도 몇 개 있었고 음악도 좋았는데 끝나고 나니까 좀 아쉽다.. 그래도 볼만함!')
