@@ -129,7 +129,7 @@ model.summary()
 
 # 모델 Callbacks 지정
 EarlyStopCB = EarlyStopping(
-    monitor="val_loss", verbose=1, patience=5, restore_best_weights=True
+    monitor="val_loss", verbose=1, patience=4, restore_best_weights=True
 )
 ModelCheckCB = ModelCheckpoint(
     "/home/sm/tf_env/20260618/movie_review_best_model.keras",
@@ -145,5 +145,5 @@ history = model.fit(
     validation_data=(X_test_pades, y_test),
     epochs=30,
     callbacks=[EarlyStopCB, ModelCheckCB],
-    batch_size=32,
+    batch_size=64,
 )
