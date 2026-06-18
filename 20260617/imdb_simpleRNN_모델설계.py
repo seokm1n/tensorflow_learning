@@ -64,7 +64,7 @@ model.add(Dense(1, activation="sigmoid"))
 model.summary()
 
 # 모델 설정(컴파일)
-optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)  # 0.00001
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)  # 0.00001
 model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 # 최상의 검증 점수를 낸 모델 저장
 checkpoint_cb = ModelCheckpoint("/home/sm/tf_env/20260617/best-simplernn-model.keras", save_best_only=True, verbose=1)
