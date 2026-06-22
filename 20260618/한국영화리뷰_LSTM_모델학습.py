@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from tensorflow.keras.optimizers import Adam as adam  # type: ignore
+from tensorflow.keras.optimizers import Adam as Adam  # type: ignore
 from konlpy.tag import Okt
 from tqdm import tqdm  # 진행바 출력
 
@@ -124,7 +124,7 @@ model.add(Embedding(word_size, embedding_dim))  # 11775, 100
 model.add(LSTM(hidden_units))
 model.add(Dense(1, activation="sigmoid"))
 
-model.compile(optimizer=adam(learning_rate=1e-5), loss="binary_crossentropy", metrics=["accuracy"])
+model.compile(optimizer=Adam(learning_rate=1e-5), loss="binary_crossentropy", metrics=["accuracy"])
 model.summary()
 
 # 모델 Callbacks 지정
